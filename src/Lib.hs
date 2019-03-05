@@ -24,16 +24,14 @@ someFunc = putTextLn "someFunc"
 data Channel = Channel Text [Record] deriving (Show, Eq)
 
 channel :: Parsec Text u Channel
-channel = between (do
-        string "<div id=\""
-        skipMany $ noneOf "\""
-        string "\">"
-    ) (string "</div>"
-    ) (do
-        name    <- channelName
-        records <- manyTill record (try (string "</div>"))
-        pure $ Channel name records
-    )
+channel = do
+    string "<div id=\""
+    skipMany $ noneOf "\""
+    string "\">"
+
+    name    <- channelName
+    records <- manyTill record (try (string "</div>"))
+    pure $ Channel name records
 
 channelName :: Parsec Text u Text
 channelName = tag "h3" bString
