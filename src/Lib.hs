@@ -3,11 +3,14 @@ module Lib
     ( someFunc
     , record
     , channel
+    , tag
+    , bString
+    , recordName
     , Record(..)
     , Channel(..)
     ) where
 
-import Universum hiding (many, optional, (<|>))
+import Universum hiding (many, optional, (<|>), try)
 import Text.Parsec 
 import Text.Parsec.Combinator
 import Text.Parsec.Char
@@ -21,7 +24,7 @@ data Channel = Channel Text [Record] deriving (Show, Eq)
 channel :: Parsec Text u Channel
 channel = between (do
         string "<div id=\""
-        void $ many $ noneOf "\""
+        skipMany $ noneOf "\""
         string "\">"
     ) (string "</div>"
     ) (do
@@ -31,24 +34,18 @@ channel = between (do
     )
 
 channelName :: Parsec Text u Text
-channelName = do
-    name  <- between (string "<h3>") (string "</h3>") (many $ noneOf "<>")
-    pure $ pack name
+channelName = tag "h3" bString
 
 data Record = Record Text Text deriving (Show, Eq)
 
 record :: Parsec Text u Record
-record = between (string "<div>") (string "</div>") $ do
-    time <- between (string "<span>") (string "</span>") (many $ noneOf "<>")
-    name <- between (string "<span>") (string "</span>") recordName
-    pure $ Record (pack time) name
+record = tag "div" (Record <$> tag "span" bString <*> tag "span" recordName)   
 
 recordName :: Parsec Text u Text
-recordName =
-    (do
-        name <- between (string "<em>") (string "</em>") $ many (noneOf "<>")
-        pure $ pack name
-    ) <|> (do
-        name <- many $ noneOf "<>"
-        pure $ pack name
-    )  
+recordName = between (string "<em>") (string "</em>") bString <|> bString
+
+bString :: Parsec Text u Text
+bString = pack <$> (many $ noneOf "<")
+
+tag :: String -> Parsec Text u p -> Parsec Text u p
+tag n = between (string $ "<" <> n <> ">") (string $ "</" <> n <> ">")
