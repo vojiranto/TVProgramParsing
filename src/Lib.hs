@@ -25,6 +25,7 @@ data Channel = Channel Text [Record] deriving (Show, Eq)
 
 channel :: Parsec Text u Channel
 channel = do
+    spaces
     string "<div id=\""
     skipMany $ noneOf "\""
     string "\">"
@@ -34,12 +35,13 @@ channel = do
     pure $ Channel name records
 
 channelName :: Parsec Text u Text
-channelName = tag "h3" bString
+channelName = spaces >> tag "h3" bString
 
 data Record = Record Text Text deriving (Show, Eq)
 
 record :: Parsec Text u Record
-record = tag "div" (Record <$> tag "span" bString <*> tag "span" recordName)   
+record = 
+    spaces >> tag "div" (Record <$> tag "span" bString <*> tag "span" recordName)   
 
 recordName :: Parsec Text u Text
 recordName = tag "em" bString <|> bString
