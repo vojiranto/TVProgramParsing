@@ -49,3 +49,11 @@ bString = pack <$> (many $ noneOf "<")
 
 tag :: String -> Parsec Text u p -> Parsec Text u p
 tag n = between (string $ "<" <> n <> ">") (string $ "</" <> n <> ">")
+
+manyOf = manyOf' []
+
+manyOf' xs p = do
+    res <- try p
+    case res of
+        Left _  -> pure $ reverse xs
+        Right x -> manyOf' x:xs p
