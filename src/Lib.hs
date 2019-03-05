@@ -25,10 +25,7 @@ data Channel = Channel Text [Record] deriving (Show, Eq)
 
 channel :: Parsec Text u Channel
 channel = do
-    spaces
-    string "<div id=\""
-    skipMany $ noneOf "\""
-    string "\">"
+    spaces >> string "<div id=\"" >> skipMany (noneOf "\"") >> string "\">"
 
     name    <- channelName
     records <- manyTill record (try (string "</div>"))
