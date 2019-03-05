@@ -16,8 +16,6 @@ data Record = Record Text Text deriving (Show, Eq)
 someFunc :: IO ()
 someFunc = putTextLn "someFunc"
 
-test =  parse record "" "<div><span>14:00</span><span><em>Kauhea kankkunen</em></span></div>"
-
 record :: Parsec Text u Record
 record = do
     string "<div><span>"
