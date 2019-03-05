@@ -31,7 +31,7 @@ channel = between (do
     ) (string "</div>"
     ) (do
         name    <- channelName
-        records <- many record
+        records <- manyTill record (try (string "</div>"))
         pure $ Channel name records
     )
 
