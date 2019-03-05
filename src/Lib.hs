@@ -19,12 +19,12 @@ someFunc = putTextLn "someFunc"
 data Channel = Channel Text [Record] deriving (Show, Eq)
 
 channel :: Parsec Text u Channel
-channel = {- between (do
+channel = between (do
         string "<div id=\""
         void $ many $ noneOf "\""
         string "\">"
     ) (string "</div>"
-    ) -} (do
+    ) (do
         name    <- channelName
         records <- many record
         pure $ Channel name records

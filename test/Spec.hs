@@ -20,6 +20,6 @@ main = hspec $ do
         (Right $ Record "14:00" "Kauhea kankkunen")
 
     it "Parsing of channel" $ shouldReturn
-        (pure $ parse channel "" "<h3>Yle 2</h3><div><span>02:00</span><span>Yle uutiset</span></div><div><span>03:00</span><span>Yle uutiset</span></div>")
+        (pure $ parse channel "" "<div id=\"yle2\"><h3>Yle 2</h3><div><span>02:00</span><span>Yle uutiset</span></div><div><span>03:00</span><span>Yle uutiset</span></div></div>")
         (Right $ Channel "Yle 2" [Record "02:00" "Yle uutiset", Record "03:00" "Yle uutiset"])
         
