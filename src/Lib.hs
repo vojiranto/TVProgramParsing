@@ -42,7 +42,7 @@ record :: Parsec Text u Record
 record = tag "div" (Record <$> tag "span" bString <*> tag "span" recordName)   
 
 recordName :: Parsec Text u Text
-recordName = between (string "<em>") (string "</em>") bString <|> bString
+recordName = tag "em" bString <|> bString
 
 bString :: Parsec Text u Text
 bString = pack <$> (many $ noneOf "<")
