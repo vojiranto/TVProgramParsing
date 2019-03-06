@@ -6,6 +6,7 @@ import           Test.Hspec
 import           Text.Parsec
 import           Text.RawString.QQ
 import           Parsing
+import           Types
 
 isOk :: IO Bool -> Expectation
 isOk action = shouldReturn action True
@@ -62,11 +63,3 @@ main = do
                 </div>
             |])
             (Right $ Channel "Yle 2" [Record "02:00" "Yle uutiset", Record "03:00" "Yle uutiset"])
-    
-        it "Parsing of record name1" $ shouldReturn
-            (pure $ parse recordName "" "Kauhea kankkunen")
-            (Right "Kauhea kankkunen")
-
-        it "Parsing of record name2" $ shouldReturn
-            (pure $ parse recordName "" "<em>Kauhea kankkunen</em>")
-            (Right "Kauhea kankkunen")

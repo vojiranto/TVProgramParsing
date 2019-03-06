@@ -7,10 +7,6 @@ module Parsing
     , day
     , structTag
     , bString
-    , recordName
-    , Record(..)
-    , Channel(..)
-    , Day (..)
     ) where
 
 import Universum hiding (many, optional, (<|>), try)
@@ -19,6 +15,8 @@ import Text.Parsec
 import Text.Parsec.Combinator
 import Text.Parsec.Char
 import Data.Text (pack)
+
+import Types
 
 someFunc :: IO ()
 someFunc = putTextLn "someFunc"
@@ -31,30 +29,24 @@ content =
             divTagHead 
             manyUntil day "</div>"
 
-            
-data Day = Day [Channel] deriving (Show, Eq)
-
 day :: Parsec Text u Day
 day = do
     divTagHead
     void (structTag "h2" bString)
     Day <$> manyUntil channel "</div>"
 
-data Channel = Channel Text [Record] deriving (Show, Eq)
-
 channel :: Parsec Text u Channel
-channel = divTagHead >> Channel <$> channelName <*> manyUntil record "</div>"
-
-channelName :: Parsec Text u Text
-channelName = structTag "h3" bString
-
-data Record = Record Text Text deriving (Show, Eq)
+channel = do
+    divTagHead
+    Channel
+        <$> structTag "h3" bString
+        <*> manyUntil record "</div>"
 
 record :: Parsec Text u Record
-record = structTag "div" (Record <$> textTag "span" bString <*> textTag "span" recordName)   
-
-recordName :: Parsec Text u Text
-recordName = textTag "em" bString <|> bString
+record = structTag "div" $
+    Record
+        <$> textTag "span" bString
+        <*> textTag "span" (textTag "em" bString <|> bString)  
 
 --------------------------------------------------------------------------------
 --                              Common Internal                               --
