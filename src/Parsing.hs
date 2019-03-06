@@ -7,17 +7,14 @@ module Parsing
     , record
     ) where
 
-import Universum hiding (many, optional, (<|>), try)
+import           Universum hiding (many, optional, (<|>), try)
 import qualified Universum as U
-import Text.Parsec 
-import Text.Parsec.Combinator
-import Text.Parsec.Char
-import Data.Text (pack)
+import           Text.Parsec 
+import           Text.Parsec.Combinator
+import           Text.Parsec.Char
+import           Data.Text (pack)
 
 import Types
-
-someFunc :: IO ()
-someFunc = putTextLn "someFunc"
 
 content :: Parsec Text u [Day]
 content =

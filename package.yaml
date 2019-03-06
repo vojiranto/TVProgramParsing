@@ -24,10 +24,12 @@ default-extensions:
 
 dependencies:
 - base >= 4.7 && < 5
-- parsec
 - aeson
-- universum
+- aeson-pretty
+- bytestring
+- parsec
 - text
+- universum
 
 library:
   source-dirs: src
