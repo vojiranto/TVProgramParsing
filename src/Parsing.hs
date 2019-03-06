@@ -1,12 +1,10 @@
 {-# LANGUAGE OverloadedStrings   #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 module Parsing
-    ( record
-    , channel
-    , content
+    ( content
     , day
-    , structTag
-    , bString
+    , channel
+    , record
     ) where
 
 import Universum hiding (many, optional, (<|>), try)
