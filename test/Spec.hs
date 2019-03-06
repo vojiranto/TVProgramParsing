@@ -5,7 +5,7 @@ import           Universum
 import           Test.Hspec
 import           Text.Parsec
 import           Text.RawString.QQ
-import           Lib
+import           Parsing
 
 isOk :: IO Bool -> Expectation
 isOk action = shouldReturn action True
@@ -33,6 +33,25 @@ main = do
                 </div>
             |])
             (Right $ Day [Channel "Yle 1" [Record "02:00" "Yle uutiset"]])
+
+        it "Parsing of content" $ shouldReturn
+            (pure $ parse content "" [r|<html>
+    <head>
+    </head>
+    <body>
+        <div id="content">
+            <div class="day" id="monday">
+                <h2>Monday</h2>
+                <div id="yle1">
+                    <h3>Yle 1</h3>
+                    <div><span>02:00</span><span>Yle uutiset</span></div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>|])
+            (Right [Day [Channel "Yle 1" [Record "02:00" "Yle uutiset"]]])
+
 
         it "Parsing of channel" $ shouldReturn
             (pure $ parse channel "" [r|
